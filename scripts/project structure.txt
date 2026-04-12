@@ -1,0 +1,105 @@
+DATA ANALYST & DATA WAREHOUSE PROJECT: END-TO-END PIPELINE
+SQL SERVER → POWER BI DASHBOARD
+(BRONZE → SILVER → GOLD → REPORTING LAYERS)
+
+------------------------------------------------------------
+1. SOURCE DATA LAYER
+------------------------------------------------------------
+
+There are two source systems:
+
+A) source_crm
+- cust_info.csv
+- prd_info.csv
+- sales_details.csv
+
+B) source_erp
+- CUST_AZ12.csv
+- LOC_A101.csv
+- PX_CAT_G1V2.csv
+
+
+------------------------------------------------------------
+2. BRONZE LAYER (RAW DATA INGESTION)
+------------------------------------------------------------
+
+All source files from CRM and ERP are loaded as raw tables
+into the Bronze layer without any changes.
+
+- Data is copied as it is
+- No cleaning is applied
+- No transformation is done
+- Used for backup and traceability
+
+
+------------------------------------------------------------
+3. SILVER LAYER (CLEANED DATA)
+------------------------------------------------------------
+
+In this layer, data is cleaned and standardized:
+
+- Remove duplicate records
+- Handle missing values
+- Standardize column names
+- Fix data type issues
+- Merge/align CRM and ERP structures where needed
+
+Result:
+Clean and validated tables ready for business use
+
+
+------------------------------------------------------------
+4. GOLD LAYER (BUSINESS / ANALYTICS LAYER)
+------------------------------------------------------------
+
+In this layer, business logic and data modeling are applied.
+
+Star schema is created:
+
+DIMENSION TABLES:
+- gold.dim_customers
+- gold.dim_products
+
+FACT TABLE:
+- gold.fact_sales
+
+
+These tables are created using cleaned Silver data
+and saved as SQL views or final tables.
+
+
+------------------------------------------------------------
+5. REPORTING LAYER (ANALYTICS VIEWS)
+------------------------------------------------------------
+
+Using Gold layer tables, analytical reporting views are created:
+
+- gold.report_customers
+  (uses: gold.dim_customers + gold.fact_sales)
+
+- gold.report_products
+  (uses: gold.dim_products + gold.fact_sales)
+
+- gold.sales_report
+  (combines gold.fact_sales + Using (gold.dim_customers , gold.dim_products)
+
+
+------------------------------------------------------------
+6. POWER BI INTEGRATION
+------------------------------------------------------------
+
+The final Gold reporting tables/views are connected to Power BI
+using SQL Server as the data source.
+
+Data used in Power BI:
+- gold.report_customers
+- gold.report_products
+- gold.sales_report
+
+Final Output:
+Interactive dashboard with KPIs, trends, and insights
+for business decision making.
+
+------------------------------------------------------------
+END OF PIPELINE
+------------------------------------------------------------
